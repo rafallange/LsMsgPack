@@ -11,6 +11,16 @@ namespace LsMsgPack {
     public MpArray() : base() { }
     public MpArray(MsgPackSettings settings):base(settings) { }
 
+    public MpArray(MsgPackSettings settings, List<MsgPackItem> initialPackedItems) : base(settings)
+    {
+      packedItems = initialPackedItems.ToArray();
+      value = new object[packedItems.Length];
+      for (var i = 0; i < packedItems.Length; i++)
+      {
+        value[i] = packedItems[i].Value;
+      }
+    }
+
     private object[] value = new object[0];
 
     private MsgPackItem[] packedItems = new MsgPackItem[0];

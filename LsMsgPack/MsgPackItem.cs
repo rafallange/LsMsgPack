@@ -174,18 +174,33 @@ namespace LsMsgPack {
       return false;
     }
     
-    public static MsgPackItem Unpack(byte[] data, bool dynamicallyCompact = true, bool preservePackages = false, bool continueProcessingOnBreakingError = false) {
+    public static MsgPackItem Unpack(byte[] data, bool dynamicallyCompact = true, bool preservePackages = false, bool continueProcessingOnBreakingError = false, bool readUntilEof = false) {
       using(MemoryStream ms = new MemoryStream(data)) {
-        return Unpack(ms, dynamicallyCompact, preservePackages, continueProcessingOnBreakingError);
+        return Unpack(ms, dynamicallyCompact, preservePackages, continueProcessingOnBreakingError, readUntilEof);
       }
     }
 
-    public static MsgPackItem Unpack(Stream stream, bool dynamicallyCompact=true, bool preservePackages=false, bool continueProcessingOnBreakingError=false) {
-      return Unpack(stream, new MsgPackSettings() {
+    public static MsgPackItem Unpack(Stream stream, bool dynamicallyCompact=true, bool preservePackages=false, bool continueProcessingOnBreakingError=false, bool readUntilEof = false) {
+      var settings = new MsgPackSettings()
+      {
         DynamicallyCompact = dynamicallyCompact,
         PreservePackages = preservePackages,
         ContinueProcessingOnBreakingError = continueProcessingOnBreakingError
-      });
+      };
+
+      if (!readUntilEof)
+        return Unpack(stream, settings);
+
+      var item = Unpack(stream, settings);
+      if (stream.Position == stream.Length)
+        return item;
+      var items = new List<MsgPackItem>();
+      items.Add(item);
+      do
+      {
+        items.Add(Unpack(stream, settings));
+      } while (stream.Position < stream.Length);
+      return new MpArray(settings, items);
     }
 
     public static MsgPackItem Unpack(Stream stream, MsgPackSettings settings) {

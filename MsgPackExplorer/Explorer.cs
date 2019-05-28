@@ -26,6 +26,10 @@ namespace MsgPackExplorer {
     private void btnProcessAfterError_CheckedChanged(object sender, EventArgs e) {
       msgPackExplorer1.ContinueOnError = btnProcessAfterError.Checked;
     }
-    
+
+    private void btnReadUntilEndOfFile_CheckedChanged(object sender, EventArgs e)
+    {
+      msgPackExplorer1.ReadUntilEof = btnReadUntilEndOfFile.Checked;
+    }
   }
 }

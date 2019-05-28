@@ -32,6 +32,7 @@
       this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
       this.btnGenerateTestFiles = new System.Windows.Forms.ToolStripMenuItem();
       this.btnProcessAfterError = new System.Windows.Forms.ToolStripMenuItem();
+      this.btnReadUntilEndOfFile = new System.Windows.Forms.ToolStripMenuItem();
       this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
       this.saveTestSuiteDialog = new System.Windows.Forms.SaveFileDialog();
       this.msgPackExplorer1 = new MsgPackExplorer.LsMsgPackExplorer();
@@ -95,7 +96,8 @@
       // 
       this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnGenerateTestFiles,
-            this.btnProcessAfterError});
+            this.btnProcessAfterError,
+            this.btnReadUntilEndOfFile});
       this.toolStripDropDownButton2.Image = global::MsgPackExplorer.Properties.Resources.Tools;
       this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
@@ -119,6 +121,14 @@
       this.btnProcessAfterError.Text = "Keep processing after errors";
       this.btnProcessAfterError.CheckedChanged += new System.EventHandler(this.btnProcessAfterError_CheckedChanged);
       // 
+      // 
+      // btnReadUntilEndOfFile
+      // 
+      this.btnReadUntilEndOfFile.CheckOnClick = true;
+      this.btnReadUntilEndOfFile.Name = "btnReadUntilEndOfFile";
+      this.btnReadUntilEndOfFile.Size = new System.Drawing.Size(220, 22);
+      this.btnReadUntilEndOfFile.Text = "Read until end of file";
+      this.btnReadUntilEndOfFile.CheckedChanged += new System.EventHandler(this.btnReadUntilEndOfFile_CheckedChanged);
       // openFileDialog1
       // 
       this.openFileDialog1.DefaultExt = "MsgPack";
@@ -139,6 +149,7 @@
       this.msgPackExplorer1.Item = null;
       this.msgPackExplorer1.Location = new System.Drawing.Point(0, 25);
       this.msgPackExplorer1.Name = "msgPackExplorer1";
+      this.msgPackExplorer1.ReadUntilEof = false;
       this.msgPackExplorer1.Size = new System.Drawing.Size(929, 470);
       this.msgPackExplorer1.TabIndex = 0;
       // 
@@ -172,6 +183,7 @@
     private System.Windows.Forms.ToolStripMenuItem btnGenerateTestFiles;
     private System.Windows.Forms.SaveFileDialog saveTestSuiteDialog;
     private System.Windows.Forms.ToolStripMenuItem btnProcessAfterError;
+    private System.Windows.Forms.ToolStripMenuItem btnReadUntilEndOfFile;
   }
 }
 

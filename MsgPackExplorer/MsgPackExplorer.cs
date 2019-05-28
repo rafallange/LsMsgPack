@@ -39,6 +39,20 @@ namespace MsgPackExplorer {
       }
     }
     
+    private bool _readUntilEof;
+    [Category("MsgPack")]
+    [DisplayName("Read Until End Of File")]
+    [Description("Set this to true in order to keep processing the stream until the end of the file.")]
+    public bool ReadUntilEof {
+      get { return _readUntilEof; }
+      set {
+        if(value != _readUntilEof) {
+            _readUntilEof = value;
+          if(!ReferenceEquals(data, null) && data.Length > 0) Data = data;
+        }
+      }
+    }
+
     private byte[] data;
     [Category("MsgPack")]
     [DisplayName("Data")]
@@ -48,7 +62,7 @@ namespace MsgPackExplorer {
       set {
         data = value;
         if(ReferenceEquals(value, null)) Item = null;
-        else Item = MsgPackItem.Unpack(data, false, true, _continueOnError);
+        else Item = MsgPackItem.Unpack(data, false, true, _continueOnError, _readUntilEof);
       }
     }
 
