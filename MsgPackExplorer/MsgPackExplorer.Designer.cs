@@ -51,6 +51,7 @@
       this.statusStrip1.SuspendLayout();
       this.panel2.SuspendLayout();
       this.panel3.SuspendLayout();
+      this.contextMenu = new System.Windows.Forms.ContextMenu();
       this.SuspendLayout();
       // 
       // treeView1
@@ -68,6 +69,7 @@
       this.treeView1.TabIndex = 0;
       this.treeView1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeView1_DrawNode);
       this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+      this.treeView1.MouseDown += this.richTextBox1_MouseDownTreeView;
       // 
       // imageList1
       // 
@@ -295,5 +297,6 @@
     private System.Windows.Forms.Panel panel3;
     private System.Windows.Forms.Splitter splitter4;
     private System.Windows.Forms.TextBox errorDetails;
+    private System.Windows.Forms.ContextMenu contextMenu;
   }
 }
