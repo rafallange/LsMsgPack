@@ -6,6 +6,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.ComponentModel;
+using System.IO;
 
 namespace MsgPackExplorer {
   public partial class LsMsgPackExplorer: UserControl {
@@ -364,6 +365,15 @@ namespace MsgPackExplorer {
       }
     }
 
+    private void richTextBox1_MouseDownTreeView(Object sender, MouseEventArgs e) {
+      if (e.Button == System.Windows.Forms.MouseButtons.Right) {
+        treeView1.SelectedNode = treeView1.GetNodeAt(e.X, e.Y);
+        if (this.PopulateContextMenu(treeView1.SelectedNode)) {
+          contextMenu.Show(treeView1, e.Location);
+        }
+      }
+    }
+
     private bool lvSelecting = false;
     private void listView1_SelectedIndexChanged(object sender, EventArgs e) {
       if(lvSelecting) return;
@@ -405,6 +415,62 @@ namespace MsgPackExplorer {
       listView1.Items.Add(lvi);
     }
 
-    
+    private bool PopulateContextMenu(Object objClicked) {
+      bool rv = false;
+      if (objClicked is TreeNode) {
+        contextMenu.MenuItems.Clear();
+        contextMenu.MenuItems.Add(new MenuItem("Save payload as...", new System.EventHandler(this.onSavePayloadClick)));
+        contextMenu.MenuItems.Add(new MenuItem("Parse payload as MessagePack", new System.EventHandler(this.onParseAsMsgPackClick)));
+        rv = true;
+      }
+
+      return rv;
+    }
+
+    private void onParseAsMsgPackClick(object sender, EventArgs e) {
+      if (treeView1.SelectedNode != null) {
+        MsgPackItem item = treeView1.SelectedNode.Tag as MsgPackItem;
+
+        if (item != null && item.Value != null) {
+          PayloadMsgPackExplorer payloadExplorer = new PayloadMsgPackExplorer(item.Value as byte[]);
+          payloadExplorer.Text = "Payload Explorer: " + treeView1.SelectedNode.Text;
+
+          payloadExplorer.ShowDialog();
+          payloadExplorer.Dispose();
+        }
+      }
+    }
+
+    private void onSavePayloadClick(Object sender, System.EventArgs e) {
+      if (treeView1.SelectedNode != null) {
+        MsgPackItem item = treeView1.SelectedNode.Tag as MsgPackItem;
+
+        if (item != null) {
+          SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+          saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+          saveFileDialog1.FilterIndex = 2;
+          saveFileDialog1.RestoreDirectory = true;
+          bool written = false;
+
+          if (saveFileDialog1.ShowDialog() == DialogResult.OK) {
+            Stream writeStream;
+            if ((writeStream = saveFileDialog1.OpenFile()) != null) {
+              using (BinaryWriter writer = new BinaryWriter(writeStream)) {
+                byte[] bytes = item.Value as byte[];
+                if (null != bytes) {
+                  writer.Write(bytes);
+                  written = true;
+                }
+              }
+              writeStream.Close();
+            }
+            if (!written) {
+              MessageBox.Show("No data written", "Problem");
+            }
+          }
+        }
+      }
+    }
   }
 }
